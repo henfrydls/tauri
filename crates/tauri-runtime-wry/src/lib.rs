@@ -4575,6 +4575,10 @@ You may have it installed on another user account, but it is not available for t
 
     if cfg!(target_os = "macos") {
       log::warn!("WebKit webview runtime not found, attempting to create webview anyway.");
+    } else if cfg!(target_os = "android") {
+      // Android always has a system WebView. A failed version query there means the UI
+      // thread did not answer in time during a cold start, not that the runtime is missing.
+      log::warn!("Android WebView did not report its version, attempting to create webview anyway.");
     } else {
       return Err(Error::WebviewRuntimeNotInstalled);
     }
